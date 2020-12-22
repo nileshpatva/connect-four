@@ -1,12 +1,13 @@
 <h1 class="heading">Connect Four</h1>
 
 <div class="board">
-  <div class="row" *ngFor="let row of board">
+  <div class="row" *ngFor="let row of board; let i = index">
     <div
       class="slot"
-      *ngFor="let slot of row"
+      *ngFor="let slot of row; let j = index"
       [ngClass]="slot"
       [ngStyle]="{ background: slot }"
+      (click)="slotClicked(i, j)"
     ></div>
   </div>
 </div>
