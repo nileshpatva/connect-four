@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "connect-four"
+    }
+  },
+  "defaultProject": "connect-four",
+  "cli": {
+    "analytics": false
+  }
 }
