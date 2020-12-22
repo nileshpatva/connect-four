@@ -19,8 +19,17 @@
   background-color: white;
   margin: 5px;
   border: 1px solid black;
+  &:hover {
+    cursor: pointer;
+    border: 5px solid gray;
+  }
 }
 .row {
   display: flex;
   flex-direction: row;
+}
+.current-player-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

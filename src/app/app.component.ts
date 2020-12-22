@@ -41,7 +41,9 @@ export class AppComponent implements OnInit {
 
     const available = this.getLastAvailableSlot(row, col);
     console.log('available', available);
-
+    if (available === null) {
+      return;
+    }
     this.fillSlot(available, col);
   }
   /**

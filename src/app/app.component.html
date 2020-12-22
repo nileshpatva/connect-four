@@ -1,5 +1,11 @@
 <h1 class="heading">Connect Four</h1>
-
+<div class="current-player-container">
+  <h3>Current Player:</h3>
+  <div
+    class="current-player slot"
+    [ngStyle]="{ background: currentPlayer }"
+  ></div>
+</div>
 <div class="board">
   <div class="row" *ngFor="let row of board; let i = index">
     <div
