@@ -1,3 +1,6 @@
+// :host {
+//   display: flex;
+// }
 .heading {
   text-align: center;
 }
@@ -23,6 +26,8 @@
     cursor: pointer;
     border: 5px solid gray;
   }
+  text-align: center;
+  font-size: xxx-large;
 }
 .row {
   display: flex;
@@ -32,4 +37,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 580px;
+  min-height: 100px;
+}
+
+.user-msg {
+  display: flex;
+  justify-content: center;
+  min-height: 30px;
+  color: orange;
+  font-weight: bolder;
 }
