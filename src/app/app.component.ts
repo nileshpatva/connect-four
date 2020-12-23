@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 
   currentPlayer = '';
   userMsg = '';
+  totalFilledSlots = 0;
   winningSlots = [];
   /**
    * class constructor method,
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
    */
   constructor() {
     this.currentPlayer = this.PLAYER_ONE;
+    this.totalFilledSlots = 0;
     this.winningSlots = [];
     for (let i = 0; i < this.rows; i++) {
       this.board[i] = [];
@@ -39,7 +41,7 @@ export class AppComponent implements OnInit {
    */
   slotClicked(row, col) {
     // console.log('slot: ', row, col);
-    if (this.winningSlots.length > 0) return;
+    if (this.winningSlots.length > 0 || this.checkForDraw()) return;
     this.userMsg = '';
 
     const available = this.getLastAvailableSlot(row, col);
@@ -49,8 +51,15 @@ export class AppComponent implements OnInit {
       return;
     }
     this.fillSlot(available, col);
-    if (this.checkHorizontalStreak() || this.checkVerticalStreak()) {
+    if (
+      this.totalFilledSlots >= 7 &&
+      (this.checkHorizontalStreak() || this.checkVerticalStreak())
+    ) {
       this.userMsg = `Winner is ${this.currentPlayer.toUpperCase()}`;
+      return;
+    }
+    if (this.checkForDraw()) {
+      this.userMsg = `That's a DRAW!!!`;
       return;
     }
     this.currentPlayer =
@@ -65,6 +74,7 @@ export class AppComponent implements OnInit {
    */
   private fillSlot(row, col) {
     this.board[row][col] = this.currentPlayer;
+    this.totalFilledSlots += 1;
   }
 
   /**
@@ -155,7 +165,16 @@ export class AppComponent implements OnInit {
     }
     return false;
   }
-
+  /**
+   * to check whether all the slots are filled or not and
+   * winningSlots list is empty or not
+   */
+  private checkForDraw() {
+    return (
+      this.totalFilledSlots === this.rows * this.columns &&
+      this.winningSlots.length === 0
+    );
+  }
   ngOnInit() {
     console.log(this.board);
   }
