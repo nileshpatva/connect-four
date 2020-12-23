@@ -7,6 +7,7 @@
 </div>
 <div class="user-msg">
   <h3 *ngIf="userMsg.length">{{ userMsg }}</h3>
+  <button class="btn-reset" (click)="startOrReset()">Reset</button>
 </div>
 <div class="board">
   <div class="row" *ngFor="let row of board; let i = index">

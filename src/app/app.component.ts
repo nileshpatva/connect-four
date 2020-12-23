@@ -24,9 +24,16 @@ export class AppComponent implements OnInit {
    * used to initialize board with value "empty" for each slot
    */
   constructor() {
+    this.startOrReset();
+  }
+  /**
+   * to initialize or reset the game board and props
+   */
+  startOrReset() {
     this.currentPlayer = this.PLAYER_ONE;
     this.totalFilledSlots = 0;
     this.winningSlots = [];
+    this.userMsg = '';
     for (let i = 0; i < this.rows; i++) {
       this.board[i] = [];
       for (let j = 0; j < this.columns; j++) {
@@ -55,7 +62,7 @@ export class AppComponent implements OnInit {
       this.totalFilledSlots >= 7 &&
       (this.checkHorizontalStreak() || this.checkVerticalStreak())
     ) {
-      this.userMsg = `Winner is ${this.currentPlayer.toUpperCase()}`;
+      this.userMsg = `🥇 Winner is ${this.currentPlayer.toUpperCase()} 🥇`;
       return;
     }
     if (this.checkForDraw()) {
