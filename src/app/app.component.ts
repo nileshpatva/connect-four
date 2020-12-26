@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -47,12 +47,10 @@ export class AppComponent {
    * @param col column index
    */
   slotClicked(row, col) {
-    // console.log('slot: ', row, col);
     if (this.winningSlots.length > 0 || this.checkForDraw()) return;
     this.userMsg = '';
 
     const available = this.getLastAvailableSlot(row, col);
-    // console.log('available', available);
     if (available === null) {
       this.userMsg = 'No more slots available!';
       return;
@@ -65,7 +63,6 @@ export class AppComponent {
         this.checkDiagonalStreaks())
     ) {
       this.userMsg = `🥇 Winner is ${this.currentPlayer.toUpperCase()} 🥇`;
-      console.log(this.winningSlots);
       return;
     }
     if (this.checkForDraw()) {
@@ -86,7 +83,6 @@ export class AppComponent {
     this.board[row][col] = this.currentPlayer;
     this.totalFilledSlots += 1;
   }
-
   /**
    * finds most bottom available slot for fill,
    * if not available returns null
@@ -103,17 +99,27 @@ export class AppComponent {
   }
   /**
    * checks four values are same or not and checks if it is not empty
-   * @param first first slot value
-   * @param second second slot value
-   * @param third third slot value
-   * @param fourth fourth slot value
+   * @param first first slot indexes
+   * @param second second slot indexes
+   * @param third third slot indexes
+   * @param fourth fourth slot indexes
    */
   private checkAdjacentColors(first, second, third, fourth) {
+    const [row_1, col_1] = first;
+    const [row_2, col_2] = second;
+    const [row_3, col_3] = third;
+    const [row_4, col_4] = fourth;
+
+    const valOne = this.board[row_1][col_1];
+    const valTwo = this.board[row_2][col_2];
+    const valThree = this.board[row_3][col_3];
+    const valFour = this.board[row_4][col_4];
+
     return (
-      first !== this.EMPTY &&
-      first === second &&
-      first === third &&
-      first === fourth
+      valOne !== this.EMPTY &&
+      valOne === valTwo &&
+      valOne === valThree &&
+      valOne === valFour
     );
   }
   /**
@@ -126,10 +132,10 @@ export class AppComponent {
       for (let col = 0; col < 4; col++) {
         if (
           this.checkAdjacentColors(
-            this.board[row][col],
-            this.board[row][col + 1],
-            this.board[row][col + 2],
-            this.board[row][col + 3]
+            [row, col],
+            [row, col + 1],
+            [row, col + 2],
+            [row, col + 3]
           )
         ) {
           this.winningSlots = [
@@ -144,7 +150,6 @@ export class AppComponent {
     }
     return false;
   }
-
   /**
    * Checks the vertical four adjacent slots
    * if they have same colors, non empty values then returns true
@@ -155,10 +160,10 @@ export class AppComponent {
       for (let row = 0; row < 3; row++) {
         if (
           this.checkAdjacentColors(
-            this.board[row][col],
-            this.board[row + 1][col],
-            this.board[row + 2][col],
-            this.board[row + 3][col]
+            [row, col],
+            [row + 1, col],
+            [row + 2, col],
+            [row + 3, col]
           )
         ) {
           this.winningSlots = [
@@ -190,6 +195,7 @@ export class AppComponent {
   private checkDiagonalStreaks() {
     for (let row = this.rows - 1; row >= 3; row--) {
       /**
+       * This for loop checks below slot area with "#"
        *   | 0 1 2 3 4 5 6
        * --|---------------
        * 0 | # # # # 0 0 0
@@ -202,10 +208,10 @@ export class AppComponent {
       for (let col = this.columns - 1; col >= 3; col--) {
         if (
           this.checkAdjacentColors(
-            this.board[row][col],
-            this.board[row - 1][col - 1],
-            this.board[row - 2][col - 2],
-            this.board[row - 3][col - 3]
+            [row, col],
+            [row - 1, col - 1],
+            [row - 2, col - 2],
+            [row - 3, col - 3]
           )
         ) {
           this.winningSlots = [
@@ -218,6 +224,7 @@ export class AppComponent {
         }
       }
       /**
+       * This for loop checks below slot area with "#"
        *   | 0 1 2 3 4 5 6
        * --|---------------
        * 0 | 0 0 0 # # # #
@@ -230,10 +237,10 @@ export class AppComponent {
       for (let col = 0; col < this.columns - 3; col++) {
         if (
           this.checkAdjacentColors(
-            this.board[row][col],
-            this.board[row - 1][col + 1],
-            this.board[row - 2][col + 2],
-            this.board[row - 3][col + 3]
+            [row, col],
+            [row - 1, col + 1],
+            [row - 2, col + 2],
+            [row - 3, col + 3]
           )
         ) {
           this.winningSlots = [
