@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   readonly EMPTY = 'empty';
   readonly PLAYER_ONE = 'red';
   readonly PLAYER_TWO = 'yellow';
@@ -60,9 +60,12 @@ export class AppComponent implements OnInit {
     this.fillSlot(available, col);
     if (
       this.totalFilledSlots >= 7 &&
-      (this.checkHorizontalStreak() || this.checkVerticalStreak())
+      (this.checkHorizontalStreak() ||
+        this.checkVerticalStreak() ||
+        this.checkDiagonalStreaks())
     ) {
       this.userMsg = `🥇 Winner is ${this.currentPlayer.toUpperCase()} 🥇`;
+      console.log(this.winningSlots);
       return;
     }
     if (this.checkForDraw()) {
@@ -135,7 +138,6 @@ export class AppComponent implements OnInit {
             `${row},${col + 2}`,
             `${row},${col + 3}`,
           ];
-          // console.log('winner', this.winningSlots);
           return true;
         }
       }
@@ -165,7 +167,6 @@ export class AppComponent implements OnInit {
             `${row + 2},${col}`,
             `${row + 3},${col}`,
           ];
-          // console.log('winner', this.winningSlots);
           return true;
         }
       }
@@ -182,7 +183,69 @@ export class AppComponent implements OnInit {
       this.winningSlots.length === 0
     );
   }
-  ngOnInit() {
-    console.log(this.board);
+  /**
+   * to check all the combinations of diagonal streaks
+   * there are two different ways to check diagonal slot match
+   */
+  private checkDiagonalStreaks() {
+    for (let row = this.rows - 1; row >= 3; row--) {
+      /**
+       *   | 0 1 2 3 4 5 6
+       * --|---------------
+       * 0 | # # # # 0 0 0
+       * 1 | # # # # # 0 0
+       * 2 | # # # # # # 0
+       * 3 | 0 # # # # # #
+       * 4 | 0 0 # # # # #
+       * 5 | 0 0 0 # # # #
+       */
+      for (let col = this.columns - 1; col >= 3; col--) {
+        if (
+          this.checkAdjacentColors(
+            this.board[row][col],
+            this.board[row - 1][col - 1],
+            this.board[row - 2][col - 2],
+            this.board[row - 3][col - 3]
+          )
+        ) {
+          this.winningSlots = [
+            `${row},${col}`,
+            `${row - 1},${col - 1}`,
+            `${row - 2},${col - 2}`,
+            `${row - 3},${col - 3}`,
+          ];
+          return true;
+        }
+      }
+      /**
+       *   | 0 1 2 3 4 5 6
+       * --|---------------
+       * 0 | 0 0 0 # # # #
+       * 1 | 0 0 # # # # #
+       * 2 | 0 # # # # # #
+       * 3 | # # # # # # 0
+       * 4 | # # # # # 0 0
+       * 5 | # # # # 0 0 0
+       */
+      for (let col = 0; col < this.columns - 3; col++) {
+        if (
+          this.checkAdjacentColors(
+            this.board[row][col],
+            this.board[row - 1][col + 1],
+            this.board[row - 2][col + 2],
+            this.board[row - 3][col + 3]
+          )
+        ) {
+          this.winningSlots = [
+            `${row},${col}`,
+            `${row - 1},${col + 1}`,
+            `${row - 2},${col + 2}`,
+            `${row - 3},${col + 3}`,
+          ];
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
